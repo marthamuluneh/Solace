@@ -1,8 +1,10 @@
 'use client';
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [lang, setLang] = useState<"en" | "am">("en");
+  const router = useRouter();
 
   const text = {
     en: {
@@ -93,7 +95,9 @@ export default function Home() {
             {t.sub}
           </p>
           <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
-            <button style={{ background: "#fff", color: "#0F6E56", border: "none", padding: "12px 24px", borderRadius: "8px", fontSize: "15px", fontWeight: "600", cursor: "pointer" }}>
+            <button
+  onClick={() => router.push("/onboarding")}
+  style={{ background: "#fff", color: "#0F6E56", border: "none", padding: "12px 24px", borderRadius: "8px", fontSize: "15px", fontWeight: "600", cursor: "pointer" }}>
               {t.btn1}
             </button>
             <button style={{ background: "transparent", color: "#fff", border: "1.5px solid rgba(255,255,255,0.6)", padding: "12px 24px", borderRadius: "8px", fontSize: "15px", cursor: "pointer" }}>
