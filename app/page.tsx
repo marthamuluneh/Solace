@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 export default function Home() {
-  const [lang, setLang] = useState("en");
+  const [lang, setLang] = useState<"en" | "am">("en");
 
   const text = {
     en: {
