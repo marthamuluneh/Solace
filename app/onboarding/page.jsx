@@ -1,6 +1,126 @@
-import { createClient } from '@supabase/supabase-js'
+'use client';
+import { useState } from "react";
+import { supabase } from "../lib/supabase";
+import { useRouter } from "next/navigation";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+export default function Onboarding() {
+  const [username, setUsername] = useState("");
+  const [lang, setLang] = useState("en");
+  const [reason, setReason] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+  const handleSubmit = async () => {
+    if (!username.trim()) {
+      setError("Please choose a username");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    try {
+      const { data, error } = await supabase.auth.signInAnonymously();
+      if (error) throw error;
+      await supabase.auth.updateUser({
+        data: { username, language: lang, reason }
+      });
+      router.push("/dashboard");
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+    }
+    setLoading(false);
+  };
+
+  return (
+    <main style={{ fontFamily: "Arial, sans-serif", background: "#f5f5f5", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
+
+      <div style={{ position: "fixed", top: 0, left: 0, right: 0, background: "#fff", padding: "14px 32px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #e0e0e0", boxShadow: "0 2px 8px rgba(0,0,0,0.06)", zIndex: 100 }}>
+        <img src="/logo.png" alt="Solace" style={{ height: "40px", objectFit: "contain" }} />
+      </div>
+
+      <div style={{ background: "#fff", borderRadius: "16px", padding: "40px", maxWidth: "440px", width: "100%", marginTop: "60px", border: "1px solid #e0e0e0" }}>
+
+        <h2 style={{ fontSize: "22px", fontWeight: "600", color: "#1a1a1a", marginBottom: "6px" }}>
+          Create your private account
+        </h2>
+        <p style={{ fontSize: "14px", color: "#666", marginBottom: "24px" }}>
+          No real name needed. No personal data required.
+        </p>
+
+        <div style={{ background: "#E1F5EE", borderRadius: "8px", padding: "14px", display: "flex", gap: "10px", marginBottom: "24px" }}>
+          <span style={{ fontSize: "18px" }}>🔒</span>
+          <p style={{ fontSize: "13px", color: "#0F4A3A", lineHeight: "1.6", margin: 0 }}>
+            Your identity is never shared with counsellors or other users. You can use any username you choose.
+          </p>
+        </div>
+
+        <div style={{ marginBottom: "18px" }}>
+          <label style={{ display: "block", fontSize: "13px", fontWeight: "500", color: "#444", marginBottom: "6px" }}>
+            Choose a username
+          </label>
+          <input
+            type="text"
+            placeholder="e.g. peacefulbird_22"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            style={{ width: "100%", padding: "10px 14px", border: "1px solid #e0e0e0", borderRadius: "8px", fontSize: "14px", outline: "none", boxSizing: "border-box" }}
+          />
+        </div>
+
+        <div style={{ marginBottom: "18px" }}>
+          <label style={{ display: "block", fontSize: "13px", fontWeight: "500", color: "#444", marginBottom: "6px" }}>
+            Preferred language
+          </label>
+          <div style={{ display: "flex", gap: "8px" }}>
+            {["en", "am", "both"].map((l) => (
+              <button
+                key={l}
+                onClick={() => setLang(l)}
+                style={{ flex: 1, padding: "9px", border: `1px solid ${lang === l ? "#0F6E56" : "#e0e0e0"}`, borderRadius: "8px", background: lang === l ? "#E1F5EE" : "#fff", color: lang === l ? "#0F6E56" : "#666", fontWeight: lang === l ? "600" : "400", cursor: "pointer", fontSize: "13px" }}>
+                {l === "en" ? "English" : l === "am" ? "አማርኛ" : "Both"}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ marginBottom: "24px" }}>
+          <label style={{ display: "block", fontSize: "13px", fontWeight: "500", color: "#444", marginBottom: "6px" }}>
+            What brings you here today? (optional)
+          </label>
+          <select
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            style={{ width: "100%", padding: "10px 14px", border: "1px solid #e0e0e0", borderRadius: "8px", fontSize: "14px", background: "#fff", outline: "none" }}>
+            <option value="">I'd rather not say</option>
+            <option value="relationship">Relationship or marriage difficulties</option>
+            <option value="family">Family conflict</option>
+            <option value="anxiety">Anxiety or stress</option>
+            <option value="trauma">Childhood trauma or past experiences</option>
+            <option value="grief">Grief or loss</option>
+            <option value="identity">Self-esteem or identity</option>
+            <option value="work">Work or career pressure</option>
+            <option value="financial">Financial stress</option>
+            <option value="academic">Academic pressure</option>
+            <option value="loneliness">Loneliness</option>
+            <option value="exploring">Just exploring</option>
+          </select>
+        </div>
+
+        {error && (
+          <p style={{ color: "#e53e3e", fontSize: "13px", marginBottom: "12px" }}>{error}</p>
+        )}
+
+        <button
+          onClick={handleSubmit}
+          disabled={loading}
+          style={{ width: "100%", background: loading ? "#ccc" : "#0F6E56", color: "#fff", border: "none", padding: "13px", borderRadius: "8px", fontSize: "15px", fontWeight: "600", cursor: loading ? "not-allowed" : "pointer" }}>
+          {loading ? "Setting up your account..." : "Enter Solace →"}
+        </button>
+
+        <p style={{ fontSize: "12px", color: "#999", textAlign: "center", marginTop: "16px" }}>
+          By continuing you agree that Solace will keep your information private and confidential.
+        </p>
+      </div>
+    </main>
+  );
+}
