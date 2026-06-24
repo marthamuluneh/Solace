@@ -3,24 +3,92 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const counsellors = [
-  { init: "HE", color: "#0F6E56", name: "Hiwet Eyob", spec: "Grief, loss & trauma", bio: "Licensed clinical psychologist with 10+ years experience. Specialises in grief processing, childhood trauma, and social psychology.", lang: "Amharic + English", rating: "4.9", sessions: "320+", online: 1200, inperson: 1500, tags: ["grief", "trauma", "anxiety"] },
-  { init: "TT", color: "#185FA5", name: "Tirsit Tiruneh", spec: "Anxiety, depression & youth mental health", bio: "BSc Psychiatric Nursing with Distinction. Specialises in anxiety, depression, youth distress, and social media harm.", lang: "Amharic + English", rating: "4.8", sessions: "150+", online: 1200, inperson: 1500, tags: ["anxiety", "youth", "depression"] },
-  { init: "GS", color: "#854F0B", name: "Dr. Girma Selassie", spec: "Relationships & family therapy", bio: "MSc in Counselling Psychology. Works with couples, families, and individuals on communication, conflict, and relationship healing.", lang: "Amharic + English", rating: "4.8", sessions: "210+", online: 1200, inperson: 1500, tags: ["relationship", "family"] },
-  { init: "MK", color: "#993356", name: "Meron Kifle", spec: "Family, parenting & women's health", bio: "Family systems therapist. Supports parents, caregivers, and women navigating family conflict, postpartum challenges, and life transitions.", lang: "Amharic", rating: "4.7", sessions: "180+", online: 1200, inperson: 1500, tags: ["family", "relationship"] },
+  {
+    init: "HE",
+    color: "#0F6E56",
+    name: "Hiwet Eyob",
+    bio: "Licensed psychologist with over 10 years of experience working with individuals across a wide range of personal and emotional challenges. Fluent in Amharic and English.",
+    lang: "Amharic + English",
+    experience: "10+ years",
+    rating: "4.9",
+    sessions: "320+",
+  },
+  {
+    init: "TT",
+    color: "#185FA5",
+    name: "Tirsit Tiruneh",
+    bio: "Psychiatric nurse with a BSc with Distinction. Brings a warm, non-judgmental approach to supporting individuals through difficult emotional and mental health experiences.",
+    lang: "Amharic + English",
+    experience: "3+ years",
+    rating: "4.8",
+    sessions: "150+",
+  },
+  {
+    init: "GS",
+    color: "#854F0B",
+    name: "Dr. Girma Selassie",
+    bio: "Counselling psychologist with an MSc and extensive experience supporting individuals, couples, and families. Known for creating a safe and trusting therapeutic space.",
+    lang: "Amharic + English",
+    experience: "8+ years",
+    rating: "4.8",
+    sessions: "210+",
+  },
+  {
+    init: "MK",
+    color: "#993356",
+    name: "Meron Kifle",
+    bio: "Experienced therapist with a compassionate and culturally sensitive approach. Works with individuals and families navigating life transitions and personal challenges.",
+    lang: "Amharic",
+    experience: "6+ years",
+    rating: "4.7",
+    sessions: "180+",
+  },
 ];
 
-const filters = ["All", "anxiety", "trauma", "relationship", "family", "grief", "youth"];
+const groupSessions = [
+  {
+    title: "Finding peace in difficult times",
+    facilitator: "Hiwet Eyob",
+    day: "Saturdays, 10:00 AM",
+    spots: 3,
+    filled: 7,
+    desc: "A safe, supportive space for those navigating emotional difficulty. Open to all. Voice-masked for full privacy.",
+  },
+  {
+    title: "Managing anxiety and daily stress",
+    facilitator: "Tirsit Tiruneh",
+    day: "Tuesdays, 6:00 PM",
+    spots: 0,
+    filled: 10,
+    desc: "Learn practical coping tools for anxiety and everyday stress. Facilitated in Amharic and English.",
+  },
+  {
+    title: "Healing relationships and family bonds",
+    facilitator: "Dr. Girma Selassie",
+    day: "Wednesdays, 5:30 PM",
+    spots: 4,
+    filled: 6,
+    desc: "For those navigating difficult family dynamics or relationship challenges. Confidential and anonymous.",
+  },
+  {
+    title: "Processing grief and loss",
+    facilitator: "Hiwet Eyob",
+    day: "Thursdays, 7:00 PM",
+    spots: 2,
+    filled: 8,
+    desc: "A compassionate group for those who have experienced any form of loss. Facilitated with care.",
+  },
+];
 
 export default function Counsellors() {
-  const [activeFilter, setActiveFilter] = useState("All");
+  const [step, setStep] = useState("choose");
+  const [sessionType, setSessionType] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedCounsellor, setSelectedCounsellor] = useState(null);
   const [selectedType, setSelectedType] = useState("online");
   const [selectedSlot, setSelectedSlot] = useState("Mon 2pm");
   const [booked, setBooked] = useState(false);
   const router = useRouter();
-
-  const filtered = activeFilter === "All" ? counsellors : counsellors.filter(c => c.tags.includes(activeFilter));
 
   const slots = ["Mon 9am", "Mon 2pm", "Tue 10am", "Tue 3pm", "Wed 9am", "Wed 4pm", "Thu 11am", "Fri 10am", "Fri 2pm"];
   const taken = ["Mon 9am", "Tue 3pm", "Thu 11am"];
@@ -38,7 +106,6 @@ export default function Counsellors() {
             { label: "Group Therapy", path: "/group-therapy" },
             { label: "Peer Chat", path: "/chat" },
             { label: "Stress Checker", path: "/stress-checker" },
-            { label: "Content", path: "/content" },
           ].map((item) => (
             <button key={item.path} onClick={() => router.push(item.path)}
               style={{ background: "none", border: "none", color: "#0F6E56", fontSize: "14px", cursor: "pointer", fontWeight: "500" }}>
@@ -49,48 +116,123 @@ export default function Counsellors() {
       </nav>
 
       <div style={{ maxWidth: "900px", margin: "0 auto", padding: "32px 24px" }}>
-        <h2 style={{ fontSize: "22px", fontWeight: "600", color: "#1a1a1a", marginBottom: "4px" }}>Find a counsellor</h2>
-        <p style={{ fontSize: "14px", color: "#666", marginBottom: "20px" }}>All sessions are private and anonymous</p>
 
-        {/* FILTERS */}
-        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "20px" }}>
-          {filters.map(f => (
-            <button key={f} onClick={() => setActiveFilter(f)}
-              style={{ padding: "6px 14px", borderRadius: "20px", border: `1px solid ${activeFilter === f ? "#0F6E56" : "#e0e0e0"}`, background: activeFilter === f ? "#E1F5EE" : "#fff", color: activeFilter === f ? "#0F6E56" : "#666", fontSize: "13px", fontWeight: activeFilter === f ? "600" : "400", cursor: "pointer" }}>
-              {f.charAt(0).toUpperCase() + f.slice(1)}
-            </button>
-          ))}
-        </div>
+        {/* STEP 1 — CHOOSE SESSION TYPE */}
+        {step === "choose" && (
+          <>
+            <h2 style={{ fontSize: "22px", fontWeight: "600", color: "#1a1a1a", marginBottom: "6px" }}>Book a session</h2>
+            <p style={{ fontSize: "14px", color: "#666", marginBottom: "32px" }}>All sessions are private, anonymous, and with licensed Ethiopian professionals.</p>
 
-        {/* COUNSELLOR LIST */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          {filtered.map((c, i) => (
-            <div key={i} style={{ background: "#fff", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0", display: "flex", gap: "16px" }}>
-              <div style={{ width: "52px", height: "52px", borderRadius: "50%", background: c.color, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: "600", fontSize: "15px", minWidth: "52px" }}>{c.init}</div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: "16px", fontWeight: "600", color: "#1a1a1a", marginBottom: "2px" }}>{c.name}</div>
-                <div style={{ fontSize: "13px", color: "#0F6E56", marginBottom: "6px" }}>{c.spec}</div>
-                <div style={{ fontSize: "13px", color: "#666", lineHeight: "1.5", marginBottom: "10px" }}>{c.bio}</div>
-                <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-                  <span style={{ fontSize: "12px", color: "#666" }}>🌐 {c.lang}</span>
-                  <span style={{ fontSize: "12px", color: "#666" }}>⭐ {c.rating}</span>
-                  <span style={{ fontSize: "12px", color: "#666" }}>👥 {c.sessions} sessions</span>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "20px" }}>
+
+              {/* INDIVIDUAL */}
+              <div
+                onClick={() => { setSessionType("individual"); setStep("individual"); }}
+                style={{ background: "#fff", borderRadius: "16px", padding: "32px", border: "1px solid #e0e0e0", cursor: "pointer", transition: "border-color 0.2s" }}
+                onMouseEnter={e => e.currentTarget.style.borderColor = "#0F6E56"}
+                onMouseLeave={e => e.currentTarget.style.borderColor = "#e0e0e0"}>
+                <div style={{ fontSize: "36px", marginBottom: "16px" }}>🎧</div>
+                <h3 style={{ fontSize: "18px", fontWeight: "600", color: "#1a1a1a", marginBottom: "8px" }}>Individual counselling</h3>
+                <p style={{ fontSize: "14px", color: "#666", lineHeight: "1.6", marginBottom: "20px" }}>A private one-on-one session with a licensed counsellor. Available online or in-person at our Addis Ababa office.</p>
+                <div style={{ background: "#E1F5EE", borderRadius: "8px", padding: "10px 14px" }}>
+                  <p style={{ fontSize: "13px", color: "#0F4A3A", margin: 0 }}>🔒 Fully anonymous · 45–60 minutes · Online or in-person</p>
                 </div>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "space-between", minWidth: "120px" }}>
-                <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: "14px", fontWeight: "600", color: "#0F6E56" }}>1,200 ETB</div>
-                  <div style={{ fontSize: "11px", color: "#999" }}>online / session</div>
+
+              {/* GROUP */}
+              <div
+                onClick={() => { setSessionType("group"); setStep("group"); }}
+                style={{ background: "#fff", borderRadius: "16px", padding: "32px", border: "1px solid #e0e0e0", cursor: "pointer" }}
+                onMouseEnter={e => e.currentTarget.style.borderColor = "#0F6E56"}
+                onMouseLeave={e => e.currentTarget.style.borderColor = "#e0e0e0"}>
+                <div style={{ fontSize: "36px", marginBottom: "16px" }}>👥</div>
+                <h3 style={{ fontSize: "18px", fontWeight: "600", color: "#1a1a1a", marginBottom: "8px" }}>Group therapy</h3>
+                <p style={{ fontSize: "14px", color: "#666", lineHeight: "1.6", marginBottom: "20px" }}>A small group of 6–10 people facilitated by a licensed psychologist. Voice-masked so no one can identify you.</p>
+                <div style={{ background: "#E1F5EE", borderRadius: "8px", padding: "10px 14px" }}>
+                  <p style={{ fontSize: "13px", color: "#0F4A3A", margin: 0 }}>🎙️ Voice masked · 75–90 minutes · Online or in-person</p>
                 </div>
-                <button
-                  onClick={() => { setSelectedCounsellor(c); setShowModal(true); setBooked(false); }}
-                  style={{ background: "#0F6E56", color: "#fff", border: "none", padding: "8px 16px", borderRadius: "8px", fontSize: "13px", fontWeight: "500", cursor: "pointer", marginTop: "12px" }}>
-                  Book session
-                </button>
               </div>
             </div>
-          ))}
-        </div>
+          </>
+        )}
+
+        {/* STEP 2A — INDIVIDUAL COUNSELLORS */}
+        {step === "individual" && (
+          <>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "6px" }}>
+              <button onClick={() => setStep("choose")}
+                style={{ background: "none", border: "none", color: "#0F6E56", fontSize: "14px", cursor: "pointer", fontWeight: "500" }}>
+                ← Back
+              </button>
+              <h2 style={{ fontSize: "22px", fontWeight: "600", color: "#1a1a1a" }}>Choose a counsellor</h2>
+            </div>
+            <p style={{ fontSize: "14px", color: "#666", marginBottom: "24px" }}>Browse our licensed counsellors and choose who you feel most comfortable with.</p>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              {counsellors.map((c, i) => (
+                <div key={i} style={{ background: "#fff", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0", display: "flex", gap: "16px", alignItems: "flex-start" }}>
+                  <div style={{ width: "52px", height: "52px", borderRadius: "50%", background: c.color, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: "600", fontSize: "15px", minWidth: "52px" }}>{c.init}</div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: "16px", fontWeight: "600", color: "#1a1a1a", marginBottom: "4px" }}>{c.name}</div>
+                    <div style={{ fontSize: "13px", color: "#666", lineHeight: "1.6", marginBottom: "10px" }}>{c.bio}</div>
+                    <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+                      <span style={{ fontSize: "12px", color: "#666" }}>🌐 {c.lang}</span>
+                      <span style={{ fontSize: "12px", color: "#666" }}>🕐 {c.experience}</span>
+                      <span style={{ fontSize: "12px", color: "#666" }}>⭐ {c.rating}</span>
+                      <span style={{ fontSize: "12px", color: "#666" }}>👥 {c.sessions} sessions</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => { setSelectedCounsellor(c); setShowModal(true); setBooked(false); }}
+                    style={{ background: "#0F6E56", color: "#fff", border: "none", padding: "10px 18px", borderRadius: "8px", fontSize: "13px", fontWeight: "500", cursor: "pointer", whiteSpace: "nowrap" }}>
+                    Book session
+                  </button>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* STEP 2B — GROUP SESSIONS */}
+        {step === "group" && (
+          <>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "6px" }}>
+              <button onClick={() => setStep("choose")}
+                style={{ background: "none", border: "none", color: "#0F6E56", fontSize: "14px", cursor: "pointer", fontWeight: "500" }}>
+                ← Back
+              </button>
+              <h2 style={{ fontSize: "22px", fontWeight: "600", color: "#1a1a1a" }}>Group therapy sessions</h2>
+            </div>
+            <p style={{ fontSize: "14px", color: "#666", marginBottom: "24px" }}>Small groups of 6–10 with a licensed psychologist. Voice masking active in all sessions.</p>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              {groupSessions.map((g, i) => (
+                <div key={i} style={{ background: "#fff", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "8px" }}>
+                    <h3 style={{ fontSize: "16px", fontWeight: "600", color: "#1a1a1a" }}>{g.title}</h3>
+                    <span style={{ background: g.spots > 0 ? "#E1F5EE" : "#FFF3CD", color: g.spots > 0 ? "#0F6E56" : "#856404", fontSize: "12px", fontWeight: "500", padding: "3px 10px", borderRadius: "20px", whiteSpace: "nowrap", marginLeft: "12px" }}>
+                      {g.spots > 0 ? `${g.spots} spots left` : "Full"}
+                    </span>
+                  </div>
+                  <p style={{ fontSize: "13px", color: "#666", lineHeight: "1.6", marginBottom: "12px" }}>{g.desc}</p>
+                  <div style={{ display: "flex", gap: "16px", marginBottom: "14px", flexWrap: "wrap" }}>
+                    <span style={{ fontSize: "12px", color: "#666" }}>👤 {g.facilitator}</span>
+                    <span style={{ fontSize: "12px", color: "#666" }}>📅 {g.day}</span>
+                    <span style={{ fontSize: "12px", color: "#666" }}>👥 {g.filled}/10 joined</span>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <p style={{ fontSize: "12px", color: "#0F6E56", margin: 0 }}>🎙️ Voice masking active — your voice is not recognizable</p>
+                    <button
+                      disabled={g.spots === 0}
+                      style={{ background: g.spots > 0 ? "#0F6E56" : "#ccc", color: "#fff", border: "none", padding: "8px 16px", borderRadius: "8px", fontSize: "13px", fontWeight: "500", cursor: g.spots > 0 ? "pointer" : "not-allowed" }}>
+                      {g.spots > 0 ? "Join group" : "Join waitlist"}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       {/* BOOKING MODAL */}
@@ -107,20 +249,19 @@ export default function Counsellors() {
 
                 <p style={{ fontSize: "13px", color: "#666", marginBottom: "12px" }}>Session type</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "20px" }}>
-                  {[{ type: "online", label: "Individual online", price: "1,200 ETB", desc: "Private video/audio, 45–60 min" },
-                    { type: "inperson", label: "Individual in-person", price: "1,500 ETB", desc: "At Solace office, Addis Ababa" }].map(s => (
+                  {[
+                    { type: "online", label: "Online session", desc: "Private video or audio call, 45–60 min" },
+                    { type: "inperson", label: "In-person session", desc: "At Solace office, Addis Ababa, 45–60 min" }
+                  ].map(s => (
                     <div key={s.type} onClick={() => setSelectedType(s.type)}
-                      style={{ border: `1px solid ${selectedType === s.type ? "#0F6E56" : "#e0e0e0"}`, background: selectedType === s.type ? "#E1F5EE" : "#fff", borderRadius: "8px", padding: "12px", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <div>
-                        <div style={{ fontSize: "14px", fontWeight: "500", color: "#1a1a1a" }}>{s.label}</div>
-                        <div style={{ fontSize: "12px", color: "#666" }}>{s.desc}</div>
-                      </div>
-                      <div style={{ fontSize: "14px", fontWeight: "600", color: "#0F6E56" }}>{s.price}</div>
+                      style={{ border: `1px solid ${selectedType === s.type ? "#0F6E56" : "#e0e0e0"}`, background: selectedType === s.type ? "#E1F5EE" : "#fff", borderRadius: "8px", padding: "12px", cursor: "pointer" }}>
+                      <div style={{ fontSize: "14px", fontWeight: "500", color: "#1a1a1a" }}>{s.label}</div>
+                      <div style={{ fontSize: "12px", color: "#666" }}>{s.desc}</div>
                     </div>
                   ))}
                 </div>
 
-                <p style={{ fontSize: "13px", color: "#666", marginBottom: "10px" }}>Available slots</p>
+                <p style={{ fontSize: "13px", color: "#666", marginBottom: "10px" }}>Available slots — this week</p>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "6px", marginBottom: "20px" }}>
                   {slots.map(slot => (
                     <button key={slot} onClick={() => !taken.includes(slot) && setSelectedSlot(slot)}
@@ -132,7 +273,7 @@ export default function Counsellors() {
 
                 <div style={{ background: "#E1F5EE", borderRadius: "8px", padding: "10px 12px", display: "flex", gap: "8px", alignItems: "center", marginBottom: "16px" }}>
                   <span>🔒</span>
-                  <span style={{ fontSize: "12px", color: "#0F4A3A" }}>Your identity remains anonymous. No personal info shared.</span>
+                  <span style={{ fontSize: "12px", color: "#0F4A3A" }}>Your identity remains anonymous. No personal info is shared with the counsellor.</span>
                 </div>
 
                 <button onClick={() => setBooked(true)}
@@ -144,10 +285,10 @@ export default function Counsellors() {
               <div style={{ textAlign: "center", padding: "20px 0" }}>
                 <div style={{ fontSize: "48px", marginBottom: "16px" }}>✅</div>
                 <h3 style={{ fontSize: "18px", fontWeight: "600", color: "#0F6E56", marginBottom: "8px" }}>Session booked!</h3>
-                <p style={{ fontSize: "14px", color: "#666", lineHeight: "1.6", marginBottom: "24px" }}>You will receive a private session link 1 hour before your appointment. Your identity remains anonymous throughout.</p>
-                <button onClick={() => setShowModal(false)}
+                <p style={{ fontSize: "14px", color: "#666", lineHeight: "1.6", marginBottom: "24px" }}>A confirmation has been sent to your email. You will receive a private session link 1 hour before your appointment. Your identity remains anonymous throughout.</p>
+                <button onClick={() => { setShowModal(false); router.push("/dashboard"); }}
                   style={{ width: "100%", background: "#0F6E56", color: "#fff", border: "none", padding: "12px", borderRadius: "8px", fontSize: "14px", fontWeight: "600", cursor: "pointer" }}>
-                  Done
+                  Back to dashboard
                 </button>
               </div>
             )}

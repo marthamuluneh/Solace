@@ -10,13 +10,6 @@ export default function Dashboard() {
     { val: "1", label: "Days with Solace" },
   ];
 
-  const resources = [
-    { tag: "Amharic", title: "Understanding anxiety in everyday life" },
-    { tag: "Video", title: "How to talk to your family about how you feel" },
-    { tag: "Article", title: "Healing from childhood wounds as an adult" },
-    { tag: "Exercise", title: "5-minute breathing technique for stress relief" },
-  ];
-
   return (
     <main style={{ fontFamily: "Arial, sans-serif", background: "#f5f5f5", minHeight: "100vh" }}>
 
@@ -30,11 +23,8 @@ export default function Dashboard() {
             { label: "Group Therapy", path: "/group-therapy" },
             { label: "Peer Chat", path: "/chat" },
             { label: "Stress Checker", path: "/stress-checker" },
-            { label: "Content", path: "/content" },
           ].map((item) => (
-            <button
-              key={item.path}
-              onClick={() => router.push(item.path)}
+            <button key={item.path} onClick={() => router.push(item.path)}
               style={{ background: "none", border: "none", color: "#0F6E56", fontSize: "14px", cursor: "pointer", fontWeight: "500" }}>
               {item.label}
             </button>
@@ -42,7 +32,6 @@ export default function Dashboard() {
         </div>
       </nav>
 
-      {/* CONTENT */}
       <div style={{ maxWidth: "900px", margin: "0 auto", padding: "32px 24px" }}>
 
         {/* HEADER */}
@@ -62,33 +51,60 @@ export default function Dashboard() {
         </div>
 
         {/* NEXT SESSION */}
-        <div style={{ marginBottom: "8px" }}>
-          <p style={{ fontSize: "11px", fontWeight: "500", color: "#888", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "12px" }}>Next session</p>
-          <div style={{ background: "#fff", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0", display: "flex", alignItems: "center", gap: "16px" }}>
-            <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "#E1F5EE", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "600", color: "#0F6E56", fontSize: "14px" }}>HE</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: "15px", fontWeight: "500", color: "#1a1a1a" }}>Hiwet Eyob</div>
-              <div style={{ fontSize: "13px", color: "#666" }}>Individual counselling</div>
-            </div>
-            <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: "13px", fontWeight: "500", color: "#0F6E56" }}>No sessions yet</div>
-            </div>
-            <button
-              onClick={() => router.push("/counsellors")}
-              style={{ background: "#0F6E56", color: "#fff", border: "none", padding: "8px 16px", borderRadius: "8px", fontSize: "13px", fontWeight: "500", cursor: "pointer" }}>
-              Book now
-            </button>
+        <p style={{ fontSize: "11px", fontWeight: "500", color: "#888", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "12px" }}>Next session</p>
+        <div style={{ background: "#fff", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0", display: "flex", alignItems: "center", gap: "16px", marginBottom: "28px" }}>
+          <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "#E1F5EE", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "600", color: "#0F6E56", fontSize: "14px" }}>?</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: "15px", fontWeight: "500", color: "#1a1a1a" }}>No sessions booked yet</div>
+            <div style={{ fontSize: "13px", color: "#666" }}>Book your first session with a licensed counsellor</div>
           </div>
+          <button onClick={() => router.push("/counsellors")}
+            style={{ background: "#0F6E56", color: "#fff", border: "none", padding: "8px 16px", borderRadius: "8px", fontSize: "13px", fontWeight: "500", cursor: "pointer" }}>
+            Book now
+          </button>
         </div>
 
-        {/* RESOURCES */}
-        <p style={{ fontSize: "11px", fontWeight: "500", color: "#888", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "12px", marginTop: "28px" }}>Recommended for you</p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "12px" }}>
-          {resources.map((r, i) => (
-            <div key={i} style={{ background: "#fff", borderRadius: "12px", padding: "16px", border: "1px solid #e0e0e0", cursor: "pointer" }}>
-              <div style={{ background: "#E1F5EE", color: "#0F6E56", fontSize: "11px", fontWeight: "500", padding: "2px 10px", borderRadius: "20px", display: "inline-block", marginBottom: "8px" }}>{r.tag}</div>
-              <div style={{ fontSize: "14px", fontWeight: "500", color: "#1a1a1a", lineHeight: "1.4" }}>{r.title}</div>
-            </div>
+        {/* DAILY STRESS CHECKER */}
+        <p style={{ fontSize: "11px", fontWeight: "500", color: "#888", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "12px" }}>Daily check-in</p>
+        <div style={{ background: "#0F6E56", borderRadius: "12px", padding: "24px", marginBottom: "28px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px" }}>
+          <div>
+            <div style={{ fontSize: "16px", fontWeight: "600", color: "#fff", marginBottom: "4px" }}>How are you feeling today?</div>
+            <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.8)" }}>Take 2 minutes to check in with yourself. Track your wellbeing over time.</div>
+          </div>
+          <button onClick={() => router.push("/stress-checker")}
+            style={{ background: "#fff", color: "#0F6E56", border: "none", padding: "10px 20px", borderRadius: "8px", fontSize: "14px", fontWeight: "600", cursor: "pointer", whiteSpace: "nowrap" }}>
+            Check in →
+          </button>
+        </div>
+
+        {/* YOUTUBE CONTENT */}
+        <p style={{ fontSize: "11px", fontWeight: "500", color: "#888", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "12px" }}>Free wellness content</p>
+        <div style={{ background: "#fff", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0", display: "flex", alignItems: "center", gap: "16px", marginBottom: "28px" }}>
+          <div style={{ width: "48px", height: "48px", borderRadius: "12px", background: "#FF0000", display: "flex", alignItems: "center", justifyContent: "center", minWidth: "48px" }}>
+            <span style={{ color: "#fff", fontSize: "20px" }}>▶</span>
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: "15px", fontWeight: "500", color: "#1a1a1a", marginBottom: "2px" }}>Watch free mental health content</div>
+            <div style={{ fontSize: "13px", color: "#666" }}>Free videos in Amharic and English — relationships, anxiety, family, grief, and more</div>
+          </div>
+          <button onClick={() => window.open("https://www.youtube.com/@SolaceEthiopia", "_blank")}
+            style={{ background: "#FF0000", color: "#fff", border: "none", padding: "8px 16px", borderRadius: "8px", fontSize: "13px", fontWeight: "500", cursor: "pointer", whiteSpace: "nowrap" }}>
+            Watch now
+          </button>
+        </div>
+
+        {/* QUICK ACTIONS */}
+        <p style={{ fontSize: "11px", fontWeight: "500", color: "#888", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "12px" }}>Quick actions</p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px" }}>
+          {[
+            { icon: "🎧", label: "Book a session", path: "/counsellors" },
+            { icon: "💬", label: "Peer chat", path: "/chat" },
+          ].map((action, i) => (
+            <button key={i} onClick={() => router.push(action.path)}
+              style={{ background: "#fff", border: "1px solid #e0e0e0", borderRadius: "12px", padding: "18px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+              <span style={{ fontSize: "24px" }}>{action.icon}</span>
+              <span style={{ fontSize: "13px", fontWeight: "500", color: "#1a1a1a" }}>{action.label}</span>
+            </button>
           ))}
         </div>
 
