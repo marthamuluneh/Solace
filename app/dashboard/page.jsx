@@ -121,7 +121,7 @@ export default function Dashboard() {
             <div style={{ fontSize: "15px", fontWeight: "500", color: "#1a1a1a", marginBottom: "2px" }}>Watch free mental health content</div>
             <div style={{ fontSize: "13px", color: "#666" }}>Free videos in Amharic and English — relationships, anxiety, family, grief, and more</div>
           </div>
-          <button onClick={() => window.open("https://youtube.com/@solace.et_official?si=oNWAobfJ23lXVcF1/")}
+          <button onClick={() => window.open("https://youtube.com/@solace.et_official?si=oNWAobfJ23lXVcF1")}
             style={{ background: "#FF0000", color: "#fff", border: "none", padding: "8px 16px", borderRadius: "8px", fontSize: "13px", fontWeight: "500", cursor: "pointer", whiteSpace: "nowrap" }}>
             Watch now
           </button>
