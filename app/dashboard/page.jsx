@@ -1,14 +1,38 @@
 'use client';
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "../lib/supabase";
 
 export default function Dashboard() {
   const router = useRouter();
+  const [upcoming, setUpcoming] = useState(0);
+  const [completed, setCompleted] = useState(0);
+  const [days, setDays] = useState(1);
+  const [nextSession, setNextSession] = useState(null);
 
-  const stats = [
-    { val: "0", label: "Sessions completed" },
-    { val: "0", label: "Upcoming sessions" },
-    { val: "1", label: "Days with Solace" },
-  ];
+  useEffect(() => {
+    fetchBookings();
+  }, []);
+
+  const fetchBookings = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data } = await supabase
+      .from("bookings")
+      .select("*")
+      .eq("user_id", user.id);
+
+    if (data) {
+      const upcomingList = data.filter(b => b.status === "upcoming");
+      const completedList = data.filter(b => b.status === "completed");
+      setUpcoming(upcomingList.length);
+      setCompleted(completedList.length);
+      if (upcomingList.length > 0) {
+        setNextSession(upcomingList[0]);
+      }
+    }
+  };
 
   return (
     <main style={{ fontFamily: "Arial, sans-serif", background: "#f5f5f5", minHeight: "100vh" }}>
@@ -42,7 +66,11 @@ export default function Dashboard() {
 
         {/* STATS */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px", marginBottom: "28px" }}>
-          {stats.map((s, i) => (
+          {[
+            { val: String(completed), label: "Sessions completed" },
+            { val: String(upcoming), label: "Upcoming sessions" },
+            { val: String(days), label: "Days with Solace" },
+          ].map((s, i) => (
             <div key={i} style={{ background: "#fff", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0" }}>
               <div style={{ fontSize: "28px", fontWeight: "600", color: "#0F6E56" }}>{s.val}</div>
               <div style={{ fontSize: "13px", color: "#666", marginTop: "4px" }}>{s.label}</div>
@@ -53,14 +81,20 @@ export default function Dashboard() {
         {/* NEXT SESSION */}
         <p style={{ fontSize: "11px", fontWeight: "500", color: "#888", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "12px" }}>Next session</p>
         <div style={{ background: "#fff", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0", display: "flex", alignItems: "center", gap: "16px", marginBottom: "28px" }}>
-          <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "#E1F5EE", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "600", color: "#0F6E56", fontSize: "14px" }}>?</div>
+          <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "#E1F5EE", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "600", color: "#0F6E56", fontSize: "14px" }}>
+            {nextSession ? nextSession.counsellor_name.split(" ").map(n => n[0]).join("") : "?"}
+          </div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: "15px", fontWeight: "500", color: "#1a1a1a" }}>No sessions booked yet</div>
-            <div style={{ fontSize: "13px", color: "#666" }}>Book your first session with a licensed counsellor</div>
+            <div style={{ fontSize: "15px", fontWeight: "500", color: "#1a1a1a" }}>
+              {nextSession ? nextSession.counsellor_name : "No sessions booked yet"}
+            </div>
+            <div style={{ fontSize: "13px", color: "#666" }}>
+              {nextSession ? `${nextSession.session_type} · ${nextSession.slot}` : "Book your first session with a licensed counsellor"}
+            </div>
           </div>
           <button onClick={() => router.push("/counsellors")}
             style={{ background: "#0F6E56", color: "#fff", border: "none", padding: "8px 16px", borderRadius: "8px", fontSize: "13px", fontWeight: "500", cursor: "pointer" }}>
-            Book now
+            {nextSession ? "View" : "Book now"}
           </button>
         </div>
 
