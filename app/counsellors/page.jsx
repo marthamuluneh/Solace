@@ -32,15 +32,32 @@ export default function Counsellors() {
 
   const confirmBooking = async () => {
     setBookingLoading(true);
-    const { data: { user } } = await supabase.auth.getUser();
-    await supabase.from("bookings").insert({
-      user_id: user ? user.id : "anonymous",
-      counsellor_name: selectedCounsellor.name,
-      session_type: selectedType,
-      slot: selectedSlot,
-      status: "upcoming",
-      created_at: new Date().toISOString(),
-    });
+    try {
+      let userId = "anonymous";
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        userId = user.id;
+      } else {
+        const { data } = await supabase.auth.signInAnonymously();
+        if (data?.user) userId = data.user.id;
+      }
+      const { error } = await supabase.from("bookings").insert({
+        user_id: userId,
+        counsellor_name: selectedCounsellor.name,
+        session_type: selectedType,
+        slot: selectedSlot,
+        status: "upcoming",
+        created_at: new Date().toISOString(),
+      });
+      if (error) {
+        console.error("Booking error:", error);
+        alert("Booking failed. Please try again.");
+        setBookingLoading(false);
+        return;
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+    }
     setBookingLoading(false);
     setBooked(true);
   };

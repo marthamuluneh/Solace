@@ -7,32 +7,46 @@ export default function Dashboard() {
   const router = useRouter();
   const [upcoming, setUpcoming] = useState(0);
   const [completed, setCompleted] = useState(0);
-  const [days, setDays] = useState(1);
+  const [days, setDays] = useState(0);
   const [nextSession, setNextSession] = useState(null);
-
-  useEffect(() => {
-    fetchBookings();
-  }, []);
 
   const fetchBookings = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const { data } = await supabase
+    const { data: bookingData } = await supabase
       .from("bookings")
       .select("*")
       .eq("user_id", user.id);
 
-    if (data) {
-      const upcomingList = data.filter(b => b.status === "upcoming");
-      const completedList = data.filter(b => b.status === "completed");
+    if (bookingData) {
+      const upcomingList = bookingData.filter(b => b.status === "upcoming");
+      const completedList = bookingData.filter(b => b.status === "completed");
       setUpcoming(upcomingList.length);
       setCompleted(completedList.length);
       if (upcomingList.length > 0) {
         setNextSession(upcomingList[0]);
       }
     }
+
+    const { data: profileData } = await supabase
+      .from("user_profiles")
+      .select("joined_at")
+      .eq("user_id", user.id)
+      .single();
+
+    if (profileData?.joined_at) {
+      const joinDate = new Date(profileData.joined_at);
+      const today = new Date();
+      const diffTime = Math.abs(today - joinDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      setDays(diffDays);
+    }
   };
+
+  useEffect(() => {
+    fetchBookings();
+  }, []);
 
   return (
     <main style={{ fontFamily: "Arial, sans-serif", background: "#f5f5f5", minHeight: "100vh" }}>
