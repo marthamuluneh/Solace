@@ -300,7 +300,7 @@ export default function StressChecker() {
                   💬 Join a peer support room
                 </button>
               )}
-              <button onClick={() => window.open("https://www.youtube.com/@SolaceEthiopia", "_blank")}
+              <button onClick={() => window.open("https://www.youtube.com/@solace.et_official", "_blank")}
                 style={{ background: "#fff", color: "#444", border: "1px solid #e0e0e0", padding: "14px", borderRadius: "10px", fontSize: "15px", fontWeight: "500", cursor: "pointer" }}>
                 ▶ Watch free wellness content
               </button>
