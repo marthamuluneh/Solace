@@ -123,7 +123,7 @@ export default function Onboarding() {
         </h2>
         <p style={{ fontSize: "14px", color: "#666", marginBottom: "24px" }}>
           {mode === "signup"
-            ? "No real name needed. Your email is only used for session notifications."
+            ? ""
             : "Log in to continue where you left off."}
         </p>
 
