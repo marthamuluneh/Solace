@@ -158,7 +158,7 @@ export default function Home() {
               {t.btn1}
             </button>
             <button
-              onClick={() => document.getElementById("learn-more").scrollIntoView({ behavior: "smooth" })}
+              onClick={() => document.getElementById("learn-more")?.scrollIntoView({ behavior: "smooth" })}
               style={{ background: "transparent", color: "#fff", border: "1.5px solid rgba(255,255,255,0.6)", padding: "14px 28px", borderRadius: "8px", fontSize: "15px", cursor: "pointer" }}>
               {t.btn2}
             </button>
