@@ -122,17 +122,13 @@ export default function Home() {
 
       {/* NAV */}
       <nav style={{ background: "#fff", padding: "14px 32px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #e0e0e0", boxShadow: "0 2px 8px rgba(0,0,0,0.06)", position: "sticky", top: 0, zIndex: 100 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <img src="/logo.png" alt="Solace" style={{ height: "40px", objectFit: "contain" }} />
-        </div>
+        <img src="/logo.png" alt="Solace" style={{ height: "40px", objectFit: "contain" }} />
         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-          <button
-            onClick={() => setLang("en")}
+          <button onClick={() => setLang("en")}
             style={{ background: lang === "en" ? "#0F6E56" : "transparent", color: lang === "en" ? "#fff" : "#0F6E56", border: "1px solid #0F6E56", padding: "5px 14px", borderRadius: "20px", cursor: "pointer", fontSize: "13px" }}>
             English
           </button>
-          <button
-            onClick={() => setLang("am")}
+          <button onClick={() => setLang("am")}
             style={{ background: lang === "am" ? "#0F6E56" : "transparent", color: lang === "am" ? "#fff" : "#0F6E56", border: "1px solid #0F6E56", padding: "5px 14px", borderRadius: "20px", cursor: "pointer", fontSize: "13px" }}>
             አማርኛ
           </button>
@@ -142,6 +138,14 @@ export default function Home() {
       {/* HERO */}
       <div style={{ background: "#0F6E56", padding: "64px 32px", color: "#fff" }}>
         <div style={{ maxWidth: "640px", margin: "0 auto", textAlign: "center" }}>
+
+          {/* LOGO IN HERO */}
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: "32px" }}>
+            <div style={{ background: "#fff", borderRadius: "20px", padding: "16px 32px", display: "inline-flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }}>
+              <img src="/logo.png" alt="Solace" style={{ height: "90px", objectFit: "contain" }} />
+            </div>
+          </div>
+
           <div style={{ background: "rgba(255,255,255,0.2)", display: "inline-block", padding: "4px 16px", borderRadius: "20px", fontSize: "13px", marginBottom: "20px" }}>
             {t.tagline}
           </div>
@@ -152,13 +156,11 @@ export default function Home() {
             {t.sub}
           </p>
           <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
-            <button
-              onClick={() => router.push("/onboarding")}
+            <button onClick={() => router.push("/onboarding")}
               style={{ background: "#fff", color: "#0F6E56", border: "none", padding: "14px 28px", borderRadius: "8px", fontSize: "15px", fontWeight: "600", cursor: "pointer" }}>
               {t.btn1}
             </button>
-            <button
-              onClick={() => document.getElementById("learn-more")?.scrollIntoView({ behavior: "smooth" })}
+            <button onClick={() => document.getElementById("learn-more")?.scrollIntoView({ behavior: "smooth" })}
               style={{ background: "transparent", color: "#fff", border: "1.5px solid rgba(255,255,255,0.6)", padding: "14px 28px", borderRadius: "8px", fontSize: "15px", cursor: "pointer" }}>
               {t.btn2}
             </button>
@@ -228,8 +230,7 @@ export default function Home() {
 
           {/* CTA */}
           <div style={{ textAlign: "center" }}>
-            <button
-              onClick={() => router.push("/onboarding")}
+            <button onClick={() => router.push("/onboarding")}
               style={{ background: "#0F6E56", color: "#fff", border: "none", padding: "14px 32px", borderRadius: "8px", fontSize: "15px", fontWeight: "600", cursor: "pointer" }}>
               {t.btn1}
             </button>
