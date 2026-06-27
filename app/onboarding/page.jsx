@@ -149,7 +149,6 @@ export default function Onboarding() {
             <button
               onClick={() => setShowPassword(!showPassword)}
               style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", fontSize: "16px", color: "#888" }}>
-              {showPassword ? "🙈" : "👁️"}
             </button>
           </div>
           {mode === "login" && (

@@ -31,36 +31,66 @@ export default function Counsellors() {
   const taken = ["Mon 9am", "Tue 3pm", "Thu 11am"];
 
   const confirmBooking = async () => {
-    setBookingLoading(true);
-    try {
-      let userId = "anonymous";
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        userId = user.id;
-      } else {
-        const { data } = await supabase.auth.signInAnonymously();
-        if (data?.user) userId = data.user.id;
-      }
-      const { error } = await supabase.from("bookings").insert({
-        user_id: userId,
-        counsellor_name: selectedCounsellor.name,
-        session_type: selectedType,
-        slot: selectedSlot,
-        status: "upcoming",
-        created_at: new Date().toISOString(),
-      });
-      if (error) {
-        console.error("Booking error:", error);
-        alert("Booking failed. Please try again.");
-        setBookingLoading(false);
-        return;
-      }
-    } catch (err) {
-      console.error("Unexpected error:", err);
+  setBookingLoading(true);
+  try {
+    let userId = "anonymous";
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      userId = user.id;
+    } else {
+      const { data } = await supabase.auth.signInAnonymously();
+      if (data?.user) userId = data.user.id;
     }
-    setBookingLoading(false);
-    setBooked(true);
-  };
+    const { error } = await supabase.from("bookings").insert({
+      user_id: userId,
+      counsellor_name: selectedCounsellor.name,
+      session_type: selectedType,
+      slot: selectedSlot,
+      status: "upcoming",
+      created_at: new Date().toISOString(),
+    });
+    if (error) {
+      console.error("Booking error:", error);
+      alert("Booking failed. Please try again.");
+      setBookingLoading(false);
+      return;
+    }
+  } catch (err) {
+    console.error("Unexpected error:", err);
+  }
+  setBookingLoading(false);
+  setBooked(true);
+};
+
+const confirmGroupBooking = async (group) => {
+  try {
+    let userId = "anonymous";
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      userId = user.id;
+    } else {
+      const { data } = await supabase.auth.signInAnonymously();
+      if (data?.user) userId = data.user.id;
+    }
+    const { error } = await supabase.from("bookings").insert({
+      user_id: userId,
+      counsellor_name: group.facilitator,
+      session_type: "group",
+      slot: group.day,
+      status: "upcoming",
+      created_at: new Date().toISOString(),
+    });
+    if (error) {
+      console.error("Group booking error:", error);
+      alert("Booking failed. Please try again.");
+      return;
+    }
+    alert(`You're booked into "${group.title}". A confirmation has been sent to your email.`);
+    router.push("/dashboard");
+  } catch (err) {
+    console.error("Unexpected error:", err);
+  }
+};
 
   return (
     <main style={{ fontFamily: "Arial, sans-serif", background: "#f5f5f5", minHeight: "100vh" }}>
@@ -180,7 +210,9 @@ export default function Counsellors() {
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <p style={{ fontSize: "12px", color: "#0F6E56", margin: 0 }}>🎙️ Voice masking active — your voice is not recognizable</p>
-                    <button disabled={g.spots === 0}
+                    <button 
+                     onClick={() => g.spots > 0 && confirmGroupBooking(g)}
+                      disabled={g.spots === 0}
                       style={{ background: g.spots > 0 ? "#0F6E56" : "#ccc", color: "#fff", border: "none", padding: "8px 16px", borderRadius: "8px", fontSize: "13px", fontWeight: "500", cursor: g.spots > 0 ? "pointer" : "not-allowed" }}>
                       {g.spots > 0 ? "Join group" : "Join waitlist"}
                     </button>

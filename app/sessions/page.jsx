@@ -118,7 +118,7 @@ export default function Sessions() {
                       </div>
                       <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
                         <span style={{ fontSize: "12px", color: "#666" }}>
-                          {session.session_type === "online" ? "🎧 Online session" : "📍 In-person session"}
+                          {session.session_type === "group" ? "👥 Group therapy" : session.session_type === "online" ? "🎧 Online session" : "📍 In-person session"}
                         </span>
                         <span style={{ fontSize: "12px", color: "#666" }}>📅 {session.slot}</span>
                       </div>
@@ -161,7 +161,7 @@ export default function Sessions() {
                       </div>
                       <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
                         <span style={{ fontSize: "12px", color: "#666" }}>
-                          {session.session_type === "online" ? "🎧 Online session" : "📍 In-person session"}
+                          {session.session_type === "group" ? "👥 Group therapy" : session.session_type === "online" ? "🎧 Online session" : "📍 In-person session"}
                         </span>
                         <span style={{ fontSize: "12px", color: "#666" }}>📅 {session.slot}</span>
                       </div>
