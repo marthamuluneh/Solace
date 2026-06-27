@@ -199,7 +199,7 @@ export default function Onboarding() {
           style={{ width: "100%", background: loading ? "#ccc" : "#0F6E56", color: "#fff", border: "none", padding: "13px", borderRadius: "8px", fontSize: "15px", fontWeight: "600", cursor: loading ? "not-allowed" : "pointer", transition: "background 0.2s" }}>
           {loading
             ? (mode === "signup" ? "Setting up your account..." : "Logging in...")
-            : (mode === "signup" ? "Enter Solace →" : "Log In →")}
+            : (mode === "signup" ? "Enter Solace →" : "Log In")}
         </button>
 
         <p style={{ fontSize: "12px", color: "#999", textAlign: "center", marginTop: "16px" }}>
