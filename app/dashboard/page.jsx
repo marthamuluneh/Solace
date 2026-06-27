@@ -115,7 +115,11 @@ export default function Dashboard() {
             </div>
             <div style={{ fontSize: "13px", color: "#666" }}>
               {nextSession
-                ? `${nextSession.session_type === "online" ? "🎧 Online" : "📍 In-person"} · ${nextSession.slot}`
+                ? `${
+      nextSession.session_type === "online" ? "🎧 Online" :
+      nextSession.session_type === "group" ? "👥 Group therapy" :
+      "📍 In-person"
+    } · ${nextSession.slot}`
                 : "Book your first session with a licensed counsellor"}
             </div>
           </div>
